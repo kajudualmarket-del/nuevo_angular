@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # --- 1. Base de Datos (MySQL) ---
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_segura
+      MYSQL_DATABASE: user_management_db
+    ports:
+      - "3310:3306" # Puerto externo: 3310
+    volumes:
+      - db-data:/var/lib/mysql
+    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_segura"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- 2. Backend (FastAPI) ---
+  app-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: app_backend
+    ports:
+      - "8006:8000" # Puerto externo: 8006
+    volumes:
+      - ./backend:/app 
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql+pymysql://root:root_password_segura@db:3306/user_management_db"
+      FRONTEND_ORIGIN: "http://localhost:9001"
+      SECRET_KEY: "tu-clave-secreta-larga-y-segura-de-32-caracteres"
+    
+    # Script de espera a la DB (Requiere 'netcat-openbsd' en el Dockerfile)
+    command: >
+      sh -c "
+      echo 'Esperando que MySQL esté listo en db:3306...' &&
+      until nc -z db 3306; do 
+        echo 'MySQL no está listo, reintentando...'
+        sleep 1
+      done &&
+      echo 'MySQL está listo. Iniciando el backend...' &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # --- 3. Frontend (Angular - Desarrollo) ---
+  app-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: app_frontend
+    ports:
+      - "9001:4200" # Mapeo: 9001 -> 4200 (Angular Dev Server)
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules # Volumen anónimo
+    depends_on:
+      app-backend:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # AUMENTADO: 90 segundos para asegurar que Angular compile.
+      start_period: 90s 
+
+    # ¡CORRECCIÓN CLAVE! Se eliminó el argumento '--disable-host-check' que causaba el error.
+    command: sh -c "npx ng serve --host 0.0.0.0 --port 4200 --poll 1000"
+
+volumes:
+  db-data:

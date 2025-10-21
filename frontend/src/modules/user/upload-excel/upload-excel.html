@@ -1,0 +1,40 @@
+<div class="upload-page-container">
+    <h2 class="upload-title">Carga Masiva de Usuarios (Excel)</h2>
+
+    <div class="data-card upload-card">
+        
+        <p class="description">Selecciona un archivo en formato **.xlsx** para subir y procesar nuevos usuarios.</p>
+
+        <input 
+            type="file" 
+            id="fileInput" 
+            (change)="onFileSelected($event)" 
+            accept=".xlsx"
+            style="display: none;"
+        >
+        
+        <div class="file-selector">
+            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                Elegir Archivo
+            </button>
+            <span class="file-name">{{ selectedFile ? selectedFile.name : 'Ningún archivo seleccionado' }}</span>
+        </div>
+
+        <button 
+            class="btn btn-primary" 
+            (click)="onUpload()" 
+            [disabled]="!selectedFile || uploading"
+        >
+            <span *ngIf="!uploading">Subir y Procesar</span>
+            <span *ngIf="uploading">Cargando...</span>
+        </button>
+
+        <div *ngIf="message" class="upload-message" [ngClass]="{'success': !uploading, 'loading': uploading}">
+            {{ message }}
+        </div>
+
+        <div class="example-link">
+            <a href="#" target="_blank">Descargar Plantilla de Ejemplo (.xlsx)</a>
+        </div>
+    </div>
+</div>

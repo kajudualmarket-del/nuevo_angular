@@ -1,0 +1,34 @@
+/* frontend/src/styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --color-primary: #1e87f0; /* Azul vibrante */
+    --color-background: #0f172a; /* Azul muy oscuro/Negro */
+    --color-card-bg: #1e293b; /* Tono de tarjeta */
+    --color-text: #f1f5f9; /* Blanco suave */
+    --color-input-bg: #334155; /* Fondo de input oscuro */
+    --color-success: #10b981;
+    --color-error: #ef4444;
+}
+
+html, body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Centrar contenedores de Auth (Login/Register) */
+body:not(.app-layout) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}

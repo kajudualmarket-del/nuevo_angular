@@ -1,0 +1,69 @@
+# ----------------------------------------------------------------------
+# Configuraciones Globales y Archivos de Entorno
+# ----------------------------------------------------------------------
+# Ignorar archivos de entorno, CRÍTICO por seguridad
+.env
+.DS_Store
+
+# ----------------------------------------------------------------------
+# Node.js / Angular (Frontend)
+# ----------------------------------------------------------------------
+/frontend/node_modules
+npm-debug.log
+yarn-error.log
+
+# Artefactos de compilación de Angular
+/dist
+/tmp
+/out-tsc
+/bazel-out
+/frontend/dist
+/frontend/out-tsc
+/.angular/cache
+
+# ----------------------------------------------------------------------
+# Python / FastAPI (Backend)
+# ----------------------------------------------------------------------
+# Directorios de entornos virtuales (si los usas fuera de Docker)
+venv/
+.venv/
+env/
+
+# Archivos de caché
+__pycache__/
+*.pyc
+.mypy_cache/
+.pytest_cache/
+
+# ----------------------------------------------------------------------
+# Docker y Contenedores
+# ----------------------------------------------------------------------
+# Esto es CRÍTICO: ignora el volumen de datos de tu base de datos MySQL
+/nuevo_angular_db-data/
+db-data/
+*.db
+
+# ----------------------------------------------------------------------
+# IDEs y editores (manteniendo tus entradas originales)
+# ----------------------------------------------------------------------
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+Thumbs.db

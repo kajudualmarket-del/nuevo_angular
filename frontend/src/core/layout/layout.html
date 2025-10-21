@@ -1,0 +1,24 @@
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="logo-text">Gestión Usuarios</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <i class="icon-users"></i> Gestión de Usuarios
+            </a>
+            <a routerLink="/admin/users/upload" routerLinkActive="active">
+                <i class="icon-upload"></i> Carga Masiva (Excel)
+            </a>
+            <div style="flex-grow: 1;"></div> 
+            
+            <a href="#" (click)="onLogout()" class="logout-link">
+                <i class="icon-logout"></i> Cerrar Sesión
+            </a>
+        </nav>
+    </aside>
+
+    <main class="content-area">
+        <router-outlet></router-outlet>
+    </main>
+</div>

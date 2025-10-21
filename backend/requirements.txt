@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pymysql # Conector MySQL para SQLAlchemy
+pandas
+openpyxl # Para leer archivos .xlsx
+python-jose[cryptography] # Para JWT
+passlib[bcrypt] # Para hashing de contraseñas
+python-multipart # Para manejo de File Uploads
+email-validator # CRÍTICO: Necesario para Pydantic EmailStr

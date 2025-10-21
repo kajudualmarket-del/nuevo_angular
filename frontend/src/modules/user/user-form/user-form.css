@@ -1,0 +1,55 @@
+/* frontend/src/app/modules/user/user-form/user-form.css */
+/* Reutiliza estilos de auth, pero dentro del layout */
+
+.form-page-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-title {
+    color: var(--color-text);
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+}
+
+.data-card {
+    background-color: var(--color-card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-text); }
+
+input[type="text"], input[type="email"] {
+    width: 100%; padding: 12px; background-color: var(--color-input-bg);
+    border: 1px solid #444; color: var(--color-text); border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(30, 135, 240, 0.2); outline: none; }
+
+.validation-error { color: var(--color-error); font-size: 13px; margin-top: 5px; }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    border: none;
+}
+.btn-primary { background-color: var(--color-primary); color: white; }
+.btn-primary:hover:not(:disabled) { background-color: #146fc2; transform: translateY(-1px); }
+.btn-secondary { background-color: #475569; color: var(--color-text); }
+.btn-secondary:hover { background-color: #334155; }
