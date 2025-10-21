@@ -1,3 +1,4 @@
+# backend/requirements.txt (CORREGIDO)
 fastapi
 uvicorn[standard]
 sqlalchemy
@@ -8,3 +9,7 @@ python-jose[cryptography] # Para JWT
 passlib[bcrypt] # Para hashing de contraseñas
 python-multipart # Para manejo de File Uploads
 email-validator # CRÍTICO: Necesario para Pydantic EmailStr
+
+# CORRECCIÓN CLAVE: Fijar la versión de bcrypt.
+# Esto resuelve el bug de inicialización de passlib que causa el ValueError 500.
+bcrypt==3.2.0
