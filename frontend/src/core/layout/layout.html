@@ -5,20 +5,21 @@
         </div>
         <nav class="sidebar-nav">
             <a routerLink="/admin/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <i class="icon-users"></i> Gestión de Usuarios
+                <i>👥</i> Gestión de Usuarios
             </a>
             <a routerLink="/admin/users/upload" routerLinkActive="active">
-                <i class="icon-upload"></i> Carga Masiva (Excel)
+                <i>📊</i> Carga Masiva (Excel)
             </a>
             <div style="flex-grow: 1;"></div> 
             
             <a href="#" (click)="onLogout()" class="logout-link">
-                <i class="icon-logout"></i> Cerrar Sesión
+                <i>🚪</i> Cerrar Sesión
             </a>
         </nav>
     </aside>
 
     <main class="content-area">
+        <app-notification></app-notification>
         <router-outlet></router-outlet>
     </main>
 </div>

@@ -3,10 +3,10 @@
         <h2>Gestión de Usuarios</h2>
         <div class="actions">
             <button class="btn btn-secondary" [routerLink]="['/admin/users/upload']">
-                <i class="icon-upload"></i> Carga Masiva
+                <span>📊</span> Carga Masiva
             </button>
             <button class="btn btn-primary" [routerLink]="['/admin/users/new']">
-                <i class="icon-plus"></i> Nuevo Usuario
+                <span>➕</span> Nuevo Usuario
             </button>
         </div>
     </div>
@@ -24,20 +24,24 @@
             </thead>
             <tbody>
                 <tr *ngFor="let user of users">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.phone }}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-action-edit" [routerLink]="['/admin/users/edit', user.id]">Editar</button>
-                        <button class="btn btn-action-delete" (click)="onDelete(user.id)">Eliminar</button>
+                    <td data-label="ID">{{ user.id }}</td>
+                    <td data-label="Nombre">{{ user.name }}</td>
+                    <td data-label="Email">{{ user.email }}</td>
+                    <td data-label="Teléfono">{{ user.phone }}</td>
+                    <td data-label="Acciones" class="action-buttons">
+                        <button class="btn btn-action-edit" [routerLink]="['/admin/users/edit', user.id]">
+                            ✏️ Editar
+                        </button>
+                        <button class="btn btn-action-delete" (click)="onDelete(user.id)">
+                            🗑️ Eliminar
+                        </button>
                     </td>
                 </tr>
             </tbody>
         </table>
 
         <div *ngIf="users.length === 0" class="empty-state">
-            No hay usuarios registrados.
+            📭 No hay usuarios registrados.
         </div>
     </div>
 </div>
