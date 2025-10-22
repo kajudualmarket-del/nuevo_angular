@@ -1,4 +1,4 @@
-// frontend/src/app/modules/user/user.service.ts (FINAL CORREGIDO)
+// frontend/src/app/modules/user/user.service.ts (FINAL CORREGIDO Y COMPLETO)
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -17,25 +17,42 @@ export interface User {
   providedIn: 'root'
 })
 export class UserService {
-  // CORRECCIÓN CRÍTICA: Se añade la barra diagonal (/) al final 
-  // para coincidir con la ruta del Backend (main.py + users.py: /api/v1/users/)
+  // CORRECTO: Mantiene la barra final para el listado (GET /api/v1/users/)
   private apiUrl = environment.apiUrl + '/api/v1/users/'; 
 
   constructor(private http: HttpClient) { }
 
   /**
-   * Obtiene la lista completa de usuarios del backend (Ruta protegida por JWT).
+   * Obtiene la lista completa de usuarios del backend.
    */
   getUsers(): Observable<User[]> {
-    // La URL ahora es correcta: http://localhost:8006/api/v1/users/
     return this.http.get<User[]>(this.apiUrl);
+  }
+
+  /**
+   * Obtiene un usuario por ID (para edición).
+   */
+  getUserById(id: number): Observable<User> {
+    // 🛑 Corrección: Quitamos la barra final del apiUrl para no tener un doble // en la URL.
+    const baseEditUrl = this.apiUrl.slice(0, -1); 
+    return this.http.get<User>(`${baseEditUrl}/${id}`);
+  }
+
+  /**
+   * Actualiza un usuario existente (PUT).
+   */
+  updateUser(id: number, user: User): Observable<User> {
+    // 🛑 Corrección: Quitamos la barra final del apiUrl.
+    const baseEditUrl = this.apiUrl.slice(0, -1); 
+    return this.http.put<User>(`${baseEditUrl}/${id}`, user); 
   }
 
   /**
    * Elimina un usuario por ID.
    */
   deleteUser(id: number): Observable<any> {
-    // Para la eliminación, el / del id se añade a la URL base correctamente: .../users/1
-    return this.http.delete(`${this.apiUrl}${id}`); 
+    // 🛑 Corrección CRÍTICA: Quitamos la barra final de this.apiUrl para prevenir el 404.
+    const baseDeleteUrl = this.apiUrl.slice(0, -1); 
+    return this.http.delete(`${baseDeleteUrl}/${id}`); 
   }
 }

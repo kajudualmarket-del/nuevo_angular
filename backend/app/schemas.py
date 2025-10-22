@@ -1,26 +1,41 @@
-# backend/app/schemas.py
+# backend/app/schemas.py (COMPLETO Y CORREGIDO)
 
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional # Necesario para campos que no son obligatorios
 
+# ---------------------------------------------
 # --- Esquemas de Usuario (para CRUD) ---
+# ---------------------------------------------
 
 class UserBase(BaseModel):
-    """Atributos comunes para lectura de usuario."""
+    """Atributos comunes para lectura/escritura de usuario."""
     email: EmailStr
-    name: Optional[str] = None
+    name: str
     phone: Optional[str] = None
     role: Optional[str] = "user"
     is_active: Optional[bool] = True
 
 
 class UserCreate(UserBase):
-    """Esquema de entrada para el Registro."""
-    password: str # El campo 'password' solo se usa en la creación, no en la lectura.
+    """Esquema de entrada para el Registro (POST). Requiere password."""
+    password: str # El campo 'password' solo se usa en la creación.
+
+
+class UserUpdate(BaseModel):
+    """
+     CORRECCIÓN: Esquema de entrada para la Actualización (PUT/PATCH).
+    Todos los campos deben ser Optional para permitir actualizaciones parciales.
+    """
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    password: Optional[str] = None # Permitir cambiar la contraseña
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
 
 
 class User(UserBase):
-    """Esquema de salida para la API (omite el hashed_password)."""
+    """Esquema de salida para la API (GET/PUT, omite el hashed_password)."""
     id: int
     
     class Config:
@@ -28,7 +43,9 @@ class User(UserBase):
         from_attributes = True 
 
 
+# ---------------------------------------------
 # --- Esquemas de Autenticación ---
+# ---------------------------------------------
 
 class LoginRequest(BaseModel):
     """Esquema de entrada para el Login (Email y Password)."""

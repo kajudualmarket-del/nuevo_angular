@@ -1,20 +1,25 @@
-// frontend/src/app/modules/user/upload-excel/upload-excel.ts (Corregido)
+// frontend/src/app/modules/user/upload-excel/upload-excel.ts (FINAL CORREGIDO Y COMPLETO)
 
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // ✅ Añadido para *ngIf, *ngFor, etc.
-import { FormsModule } from '@angular/forms'; // Añadido para two-way binding con el input (opcional, pero buena práctica)
+import { Component, inject } from '@angular/core'; 
+import { CommonModule } from '@angular/common'; 
+import { FormsModule } from '@angular/forms'; 
+import { HttpClient } from '@angular/common/http'; // <-- Importar HttpClient
+import { environment } from 'src/environments/environment'; // <-- Importar environment
 
 @Component({
-  // Se recomienda usar el sufijo 'Component' para la clase
-  selector: 'app-upload-excel',
-  standalone: true, // Debe ser standalone
-  imports: [CommonModule, FormsModule], // ✅ Importaciones añadidas
-  templateUrl: './upload-excel.html',
-  styleUrl: './upload-excel.css'
+  selector: 'app-upload-excel',
+  standalone: true, 
+  imports: [CommonModule, FormsModule], 
+  // Nota: Si HttpClientModule ya está en tu app.config.ts o AppModule, no necesitas providers: []
+  templateUrl: './upload-excel.html',
+  styleUrl: './upload-excel.css'
 })
-export class UploadExcelComponent { // ✅ Clase renombrada a 'UploadExcelComponent'
+export class UploadExcelComponent { 
 
-  // Propiedades requeridas para la lógica de subida
+  // La URL del endpoint DEBE coincidir con el backend: /api/v1/users/upload-excel/
+  private uploadUrl = environment.apiUrl + '/api/v1/users/upload-excel/';
+  private http = inject(HttpClient); 
+
   selectedFile: File | null = null;
   uploading: boolean = false;
   message: string = '';
@@ -33,12 +38,24 @@ export class UploadExcelComponent { // ✅ Clase renombrada a 'UploadExcelCompon
     this.uploading = true;
     this.message = 'Subiendo...';
     
-    // AQUÍ VA LA LÓGICA REAL DE HTTP PARA SUBIR EL ARCHIVO
-    // Por ahora, simularemos la subida.
-    setTimeout(() => {
-        this.uploading = false;
-        this.message = `Archivo ${this.selectedFile?.name} subido con éxito.`;
-        this.selectedFile = null;
-    }, 2000);
+    // Usar FormData para enviar el archivo
+    const formData = new FormData();
+    // 'file' debe coincidir con el nombre de la variable en el Backend: UploadFile = File(...)
+    formData.append('file', this.selectedFile, this.selectedFile.name);
+
+    this.http.post(this.uploadUrl, formData).subscribe({
+        next: (response: any) => {
+            this.uploading = false;
+            this.message = response.message || 'Carga masiva completada.';
+            this.selectedFile = null;
+            // Opcional: Redirigir o emitir un evento para recargar la lista de usuarios
+        },
+        error: (err) => {
+            this.uploading = false;
+            console.error('Error en la carga masiva:', err);
+            // Mostrar mensaje de error del backend si está disponible
+            this.message = `Error en la carga: ${err.error?.detail || 'Revisa el log.'}`;
+        }
+    });
   }
 }
