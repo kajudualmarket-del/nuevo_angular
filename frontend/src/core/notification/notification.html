@@ -1,0 +1,22 @@
+<!-- frontend/src/core/notification/notification.html -->
+<div class="notification-container">
+  <div 
+    *ngFor="let notification of notifications" 
+    [class]="'notification ' + getNotificationClass(notification.type)"
+  >
+    <div class="notification-icon">
+      {{ getIcon(notification.type) }}
+    </div>
+    <div class="notification-content">
+      <p class="notification-message">{{ notification.message }}</p>
+    </div>
+    <button 
+      class="notification-close" 
+      (click)="close(notification.id)"
+      aria-label="Cerrar notificación"
+    >
+      ×
+    </button>
+  </div>
+</div>
+
