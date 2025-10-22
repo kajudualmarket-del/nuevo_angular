@@ -1,10 +1,15 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+/* frontend/tsconfig.app.json (CORRECCIÓN FINAL) */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    
+    // 🚀 CORRECCIÓN CLAVE: Agregamos las opciones de alias
+    "baseUrl": "./", 
+    "paths": {
+      "src/*": ["src/*"] 
+    }
   },
   "include": [
     "src/**/*.ts"

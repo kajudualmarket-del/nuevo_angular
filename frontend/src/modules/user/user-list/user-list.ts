@@ -1,44 +1,63 @@
-// frontend/src/app/modules/user/user-list/user-list.ts (FINAL CORREGIDO)
+// frontend/src/app/modules/user/user-list/user-list.ts (COMPLETO Y FUNCIONAL)
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// ✅ AÑADIDO: Módulo necesario para [routerLink]
 import { RouterLink } from '@angular/router'; 
-
-// ✅ Definición de la interfaz User para tipar correctamente los datos
-interface User {
-  id: number;
-  name: string;
-  // ✅ AÑADIDO: Propiedades que faltaban en el log de error
-  email: string; 
-  phone: string;
-}
+import { HttpClientModule } from '@angular/common/http'; 
+import { UserService, User } from '../user.service'; // ✅ Importa el nuevo servicio
 
 @Component({
   selector: 'app-user-list',
   standalone: true, 
-  // ✅ CORRECCIÓN: Agregar RouterLink
-  imports: [CommonModule, RouterLink], 
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    HttpClientModule // Necesario para usar HttpClient en este componente standalone
+  ], 
   templateUrl: './user-list.html',
-  styleUrl: './user-list.css'
+  styleUrl: './user-list.css',
+  providers: [UserService] // ✅ Provee el servicio localmente
 })
 export class UserListComponent implements OnInit { 
-  
-  // ✅ CORRECCIÓN: Tipado correcto de 'users' (para solucionar user.email/phone)
-  users: User[] = [
-    { id: 1, name: 'Alice', email: 'alice@test.com', phone: '123456789' },
-    { id: 2, name: 'Bob', email: 'bob@test.com', phone: '987654321' }
-  ];
+  users: User[] = [];
+
+  // ✅ Inyección de dependencia del servicio
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    // Aquí puedes cargar los usuarios desde un servicio.
+    this.loadUsers(); // Carga los usuarios al iniciar
   }
 
-  // ✅ CORRECCIÓN: Método onDelete (para solucionar el error en la plantilla)
+  /**
+   * Función para obtener los usuarios del backend usando el servicio.
+   */
+  loadUsers(): void {
+    this.userService.getUsers().subscribe({
+      next: (data) => {
+        this.users = data; // Asigna los datos reales
+        console.log('Usuarios cargados correctamente:', data);
+      },
+      error: (err) => {
+        console.error('Error al cargar usuarios. Verifica el token y el CORS en el backend.', err);
+      }
+    });
+  }
+
+  /**
+   * Método para manejar la eliminación de usuarios.
+   */
   onDelete(userId: number): void {
     if (confirm(`¿Estás seguro de que quieres eliminar al usuario con ID ${userId}?`)) {
-      console.log(`Eliminando usuario ${userId}...`);
-      // Lógica de eliminación con tu UserService
+      this.userService.deleteUser(userId).subscribe({
+        next: () => {
+          console.log(`Usuario ${userId} eliminado.`);
+          this.loadUsers(); // Recarga la lista para actualizar la vista
+        },
+        error: (err) => {
+          console.error(`Error al eliminar usuario ${userId}:`, err);
+          alert('Error al eliminar el usuario.');
+        }
+      });
     }
   }
 }

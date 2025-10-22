@@ -7,10 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 # Importaciones de tu propia estructura
 from .db import create_tables # Función para crear las tablas
 from .api.endpoints import auth # Router de Autenticación
-
+from .api.endpoints import users # 🚀 AÑADIDO: Router de Usuarios
 
 # Inicialización de FastAPI
-# ✅ CORRECCIÓN DE SINTAXIS (eliminando el carácter invisible U+00A0)
 app = FastAPI(
     title="NUEVO_ANGULAR: Gestión de Usuarios API",
     openapi_url="/api/v1/openapi.json"
@@ -18,14 +17,20 @@ app = FastAPI(
 
 # 🚨 CRÍTICO: Configuración CORS
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
-origins = [
-    FRONTEND_ORIGIN,
-    "http://localhost",
-]
+# CORRECCIÓN: Si FRONTEND_ORIGIN existe, lo dividimos por la coma para obtener una lista de orígenes.
+# Si no existe, usamos una lista vacía para evitar errores.
+origins_list = []
+if FRONTEND_ORIGIN:
+    origins_list = FRONTEND_ORIGIN.split(',')
+
+# 💡 Ahora añadimos los orígenes. Usar "http://localhost" o "http://127.0.0.1" ya no es necesario 
+# si están incluidos en la variable de entorno, pero los dejamos si necesitas probar sin Docker.
+origins = origins_list 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    # Ahora 'origins' es una lista ['http://localhost:9001', 'http://localhost:4200']
+    allow_origins=origins, 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,10 +39,11 @@ app.add_middleware(
 
 # --- ROUTERS ---
 
-# ✅ CORRECCIÓN DE ROUTING: El prefijo ahora es /api/v1/auth para coincidir con el frontend
+# Router de Autenticación (Ruta final: /api/v1/auth/...)
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
 
-# (Aquí se agregarán los routers de /users, /upload, etc.)
+# 🚀 AÑADIDO: Router de Usuarios (Ruta final: /api/v1/users/...)
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 
 
 # --- EVENTOS DE INICIO ---
